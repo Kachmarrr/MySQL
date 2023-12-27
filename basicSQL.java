@@ -1,33 +1,27 @@
 package org.example;
 
-import com.mysql.fabric.jdbc.FabricMySQLDriver;
-
 import java.sql.*;
 
 public class Main {
-    public static void main(String[] args) {
-        Connection connection;
 
-        final String URL = "jdbc:mysql://localhost:3306/mydbtest?useSSL=false";
-        final String USERNAME = "root";
-        final String PASSWORD = "kachmarsql.ann170936";
+    private static final String URL = "jdbc:mysql://localhost:3306/mydbtest?useSSL=false";
+    private static final String USERNAME = "USER";
+    private static final String PASSWORD = "PASSWORD";
 
-        try {
-            Driver driver = new FabricMySQLDriver();
-            DriverManager.registerDriver(driver);
+    public static void main(String[] args) throws SQLException {
 
-            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            if (!connection.isClosed()){
-                System.out.printf("connection is good!");
-            }
+        Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 
-            connection.close();
+        Statement statement = connection.createStatement();
+        ResultSet results = statement.executeQuery("SELECT  * FROM users ");
 
-            if (connection.isClosed()){
-                System.out.printf("connection is closed!");
-            }
-        } catch (SQLException e) {
-            System.out.printf("не вдалось загрузити драйвер");
+        while (results.next()) {
+            Integer id = results.getInt(1);
+            String name = results.getString(2);
+            Integer age = results.getInt(3);
+            String email = results.getString(4);
+
+            System.out.println(results.getRow() + id + "\t"+ name + "\t" + age +"\t" + email);
         }
     }
 }
